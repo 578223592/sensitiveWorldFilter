@@ -1,3 +1,3 @@
-module sentive_word_filter
+module wordsFilter
 
 go 1.22
