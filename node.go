@@ -1,4 +1,4 @@
-package wordsFilter
+package sentive_word_filter
 
 type Node struct {
 	isEndNode bool

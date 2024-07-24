@@ -1,4 +1,4 @@
-package wordsFilter
+package sentive_word_filter
 
 import (
 	"testing"
@@ -16,8 +16,11 @@ func TestWordsFilter(t *testing.T) {
 	wf.RemoveSensitiveWord("shif")
 	wf.Add(texts...)
 
-	if ok, _ := wf.IsContainsSensitiveWord("都是坏蛋，，，"); !ok {
+	ok, word := wf.IsContainsSensitiveWord("都是fdsafa坏蛋，，，")
+	if !ok {
 		t.Error("Test_IsContainsSensitiveWord error")
+	} else {
+		t.Log(word)
 	}
 
 }

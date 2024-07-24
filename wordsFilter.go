@@ -1,4 +1,4 @@
-package wordsFilter
+package sentive_word_filter
 
 import (
 	"bytes"
