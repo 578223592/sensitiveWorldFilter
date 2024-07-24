@@ -18,7 +18,7 @@ type WordsFilter struct {
 
 type Config struct {
 	StripSpace  bool
-	IgnoreRunes []rune
+	IgnoreRunes []rune //todo 看下这个功能开启没哟
 }
 
 // New creates a words filter.
@@ -54,8 +54,12 @@ func (wf *WordsFilter) IsContainsSensitiveWord(text string) (bool, string) {
 	return wf.treeRoot.contains(text)
 }
 
-// RemoveSensitiveWord specified sensitive words from sensitive word map.
-func (wf *WordsFilter) RemoveSensitiveWord(texts ...string) {
+// RemoveSensitiveWords
+//
+//	@Description: 移除敏感词
+//	@receiver wf
+//	@param texts
+func (wf *WordsFilter) RemoveSensitiveWords(texts ...string) {
 	for _, text := range texts {
 		if wf.config.StripSpace {
 			text = stripSpace(text)
@@ -74,4 +78,10 @@ func stripSpace(str string) string {
 		bf.WriteString(field)
 	}
 	return bf.String()
+}
+
+func (wf *WordsFilter) FilterAll(text string) string {
+	newText := wf.treeRoot.filterAll(text)
+
+	return newText
 }

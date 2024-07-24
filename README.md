@@ -21,5 +21,5 @@ RemoveSensitiveWord(texts ...string)
 
 ## thanks
 - https://github.com/syyongx/go-wordsfilter
-- https://github.com/importcjj/sensitive/blob/master/trie_tree.go
+- https://github.com/importcjj/sensitive
 

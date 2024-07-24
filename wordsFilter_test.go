@@ -13,7 +13,7 @@ func TestWordsFilter(t *testing.T) {
 		"ความรุ่งโรจน์",
 	}
 	wf := NewWordsFilter(DefaultIgnoreRunes, true)
-	wf.RemoveSensitiveWord("shif")
+	wf.RemoveSensitiveWords("shif")
 	wf.Add(texts...)
 
 	ok, word := wf.IsContainsSensitiveWord("都是fdsafa坏蛋，，，")
@@ -40,6 +40,32 @@ func Test_stripSpace(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := stripSpace(tt.args.str); got != tt.want {
 				t.Errorf("stripSpace() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestWordsFilter_FilterAll(t *testing.T) {
+	type args struct {
+		text string
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{
+			name: "test1",
+			args: args{text: "坏蛋-3-441坏蛋"},
+			want: "-3-441",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			wf := NewWordsFilter(make([]rune, 0), true)
+			wf.Add("坏蛋")
+			if got := wf.FilterAll(tt.args.text); got != tt.want {
+				t.Errorf("FilterAll() = %v, want %v", got, tt.want)
 			}
 		})
 	}

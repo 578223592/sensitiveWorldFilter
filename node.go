@@ -66,10 +66,10 @@ func (root *TreeRoot) contains(text string) (bool, string) {
 	for index := 0; index < len(textRune); index++ {
 		var curRune = textRune[index]
 		curNode, ok := curParent.children[curRune]
-		if !ok || (!curParent.isEndNode && index == len(textRune)-1) {
+		if !ok || (!curNode.isEndNode && index == len(textRune)-1) {
 			// 重新开始匹配
 			curParent = (*Node)(root)
-			index = sensitiveWordStartIndex // 在本次循环结束会自动++，因此这里不用++
+			index = sensitiveWordStartIndex // index在本次循环结束会自动++，因此这里不用++
 			sensitiveWordStartIndex++
 			continue
 		}
@@ -81,4 +81,34 @@ func (root *TreeRoot) contains(text string) (bool, string) {
 		curParent = curNode
 	}
 	return false, ""
+}
+
+func (root *TreeRoot) filterAll(text string) string {
+	var resultRunes = make([]rune, 0)
+
+	textRune := []rune(text)
+	curParent := (*Node)(root)
+	var sensitiveWordStartIndex = 0
+	for index := 0; index < len(textRune); index++ {
+		var curRune = textRune[index]
+		curNode, found := curParent.children[curRune]
+		if !found || (!curNode.isEndNode && index == len(textRune)-1) {
+			// 重新开始匹配
+			resultRunes = append(resultRunes, curRune)
+			curParent = (*Node)(root)
+			index = sensitiveWordStartIndex // index在本次循环结束会自动++，因此这里不用++
+			sensitiveWordStartIndex++
+			continue
+		}
+
+		if curNode.isEndNode {
+			//匹配上了，这中间的都不要了
+			sensitiveWordStartIndex = index + 1
+			curParent = (*Node)(root)
+		} else { //往下遍历
+			curParent = curNode
+		}
+
+	}
+	return string(resultRunes)
 }
