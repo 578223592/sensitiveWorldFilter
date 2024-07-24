@@ -1,4 +1,4 @@
-package sentive_word_filter
+package wordsFilter
 
 import (
 	"testing"
