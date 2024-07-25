@@ -12,7 +12,7 @@ func TestWordsFilter(t *testing.T) {
 		"アンジェラ",
 		"ความรุ่งโรจน์",
 	}
-	wf := NewWordsFilter(DefaultIgnoreRunes, true)
+	wf := NewWordsFilter()
 	wf.RemoveSensitiveWords("shif")
 	wf.Add(texts...)
 
@@ -56,14 +56,14 @@ func TestWordsFilter_FilterAll(t *testing.T) {
 	}{
 		{
 			name: "test1",
-			args: args{text: "坏蛋-3-441坏蛋"},
+			args: args{text: "坏蛋-3-441大坏蛋"},
 			want: "-3-441",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			wf := NewWordsFilter(make([]rune, 0), true)
-			wf.Add("坏蛋")
+			wf := NewWordsFilter()
+			wf.Add("坏蛋", "大坏蛋")
 			if got := wf.FilterAll(tt.args.text); got != tt.want {
 				t.Errorf("FilterAll() = %v, want %v", got, tt.want)
 			}

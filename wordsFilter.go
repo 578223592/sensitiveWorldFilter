@@ -7,27 +7,18 @@ import (
 	"sync"
 )
 
-// defaultIgnoreRunes 对敏感词表操作对时候会忽略对字符
-var DefaultIgnoreRunes = []rune{}
-
 type WordsFilter struct {
-	config   Config
 	treeRoot *TreeRoot
 	mutex    sync.RWMutex
 }
 
-type Config struct {
-	StripSpace  bool
-	IgnoreRunes []rune //todo 看下这个功能开启没哟
-}
-
-// New creates a words filter.
-func NewWordsFilter(ignoreRunes []rune, ignoreSpace bool) *WordsFilter {
+// NewWordsFilter
+//
+//	@Description: New creates a words filter.
+//	@param ignoreSpace
+//	@return *WordsFilter
+func NewWordsFilter() *WordsFilter {
 	return &WordsFilter{
-		config: Config{
-			StripSpace:  ignoreSpace,
-			IgnoreRunes: ignoreRunes,
-		},
 		treeRoot: (*TreeRoot)(NewNode(false, 1)),
 	}
 }
@@ -43,9 +34,6 @@ func (wf *WordsFilter) Add(texts ...string) {
 }
 
 func (wf *WordsFilter) IsContainsSensitiveWord(text string) (bool, string) {
-	if wf.config.StripSpace {
-		text = stripSpace(text)
-	}
 	if len(text) == 0 {
 		return false, ""
 	}
@@ -61,9 +49,6 @@ func (wf *WordsFilter) IsContainsSensitiveWord(text string) (bool, string) {
 //	@param texts
 func (wf *WordsFilter) RemoveSensitiveWords(texts ...string) {
 	for _, text := range texts {
-		if wf.config.StripSpace {
-			text = stripSpace(text)
-		}
 		wf.mutex.Lock()
 		wf.treeRoot.remove(text)
 		wf.mutex.Unlock()
@@ -82,6 +67,5 @@ func stripSpace(str string) string {
 
 func (wf *WordsFilter) FilterAll(text string) string {
 	newText := wf.treeRoot.filterAll(text)
-
 	return newText
 }
